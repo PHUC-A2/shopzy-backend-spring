@@ -14,7 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopzy.domain.User;
+import com.example.shopzy.domain.request.ReqCreateUserDTO;
+import com.example.shopzy.domain.request.ReqUpdateUserDTO;
+import com.example.shopzy.domain.response.ResCreateUserDTO;
+import com.example.shopzy.domain.response.ResUpdateUserDTO;
 import com.example.shopzy.service.UserService;
+import com.example.shopzy.util.annotation.ApiMessage;
+import com.example.shopzy.util.error.EmailInvalidException;
+import com.example.shopzy.util.error.IdInvalidException;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -26,29 +35,58 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = this.userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    @ApiMessage("create a user")
+    public ResponseEntity<ResCreateUserDTO> createUser(@Valid @RequestBody ReqCreateUserDTO dto) throws EmailInvalidException {
+
+        User user = this.userService.convertToReqCreateUserDTO(dto);
+
+        boolean isEmailExists = this.userService.isEmailExists(user.getEmail());
+        if (isEmailExists) {
+            throw new EmailInvalidException("Email: " + user.getEmail() + " đã tồn tại");
+        }
+
+        User userCreate = this.userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(userCreate));
     }
 
     @GetMapping("/users")
+    @ApiMessage("fetch all users")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(this.userService.getAllUsers());
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(this.userService.getUserById(id));
+    @ApiMessage("fetch user by id")
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) throws IdInvalidException {
+
+        User user = this.userService.getUserById(id);
+        if (user == null) {
+            throw new IdInvalidException("User với ID = " + id + " không tồn tại");
+        }
+        return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
-        // User updated = this.userService.updateUser(id, user);
-        return ResponseEntity.ok(this.userService.updateUser(id, user));
+    @PutMapping("/users")
+    @ApiMessage("update a user")
+    public ResponseEntity<ResUpdateUserDTO> updateUser(@Valid @RequestBody ReqUpdateUserDTO dto) throws IdInvalidException {
+
+        User user = this.userService.convertToReqUpdateUserDTO(dto);
+
+        User userUpdate = this.userService.updateUser(user);
+        if (userUpdate == null) {
+            throw new IdInvalidException("User với ID = " + user.getId() + " không tồn tại");
+        }
+        return ResponseEntity.ok(this.userService.convertToResUpdateUserDTO(userUpdate));
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+    @ApiMessage("delete a user")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) throws IdInvalidException {
+
+        User user = this.userService.getUserById(id);
+        if (user == null) {
+            throw new IdInvalidException("User với ID = " + id + " không tồn tại");
+        }
         this.userService.deleteUser(id);
         return ResponseEntity.ok(null);
     }

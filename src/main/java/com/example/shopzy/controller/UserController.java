@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,14 +30,17 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/users")
     @ApiMessage("create a user")
-    public ResponseEntity<ResCreateUserDTO> createUser(@Valid @RequestBody ReqCreateUserDTO dto) throws EmailInvalidException {
+    public ResponseEntity<ResCreateUserDTO> createUser(@Valid @RequestBody ReqCreateUserDTO dto)
+            throws EmailInvalidException {
 
         User user = this.userService.convertToReqCreateUserDTO(dto);
 
@@ -44,8 +48,15 @@ public class UserController {
         if (isEmailExists) {
             throw new EmailInvalidException("Email: " + user.getEmail() + " đã tồn tại");
         }
+        System.out.println("Pass  truoc khi hard: " + user.getPassword());
+
+        // hardpasswd
+        String hardPassword = this.passwordEncoder.encode(dto.getPassword());
+        user.setPassword(hardPassword);
+        System.out.println("Pass sau khi hard: " + user.getPassword());
 
         User userCreate = this.userService.createUser(user);
+        System.out.println("Hard pass thanh cong: " + user.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(userCreate));
     }
 
@@ -68,7 +79,8 @@ public class UserController {
 
     @PutMapping("/users")
     @ApiMessage("update a user")
-    public ResponseEntity<ResUpdateUserDTO> updateUser(@Valid @RequestBody ReqUpdateUserDTO dto) throws IdInvalidException {
+    public ResponseEntity<ResUpdateUserDTO> updateUser(@Valid @RequestBody ReqUpdateUserDTO dto)
+            throws IdInvalidException {
 
         User user = this.userService.convertToReqUpdateUserDTO(dto);
 

@@ -2,6 +2,8 @@ package com.example.shopzy.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,10 +22,12 @@ import com.example.shopzy.domain.request.ReqUpdateUserDTO;
 import com.example.shopzy.domain.response.ResCreateUserDTO;
 import com.example.shopzy.domain.response.ResUpdateUserDTO;
 import com.example.shopzy.domain.response.ResUserDTO;
+import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.service.UserService;
 import com.example.shopzy.util.annotation.ApiMessage;
 import com.example.shopzy.util.error.EmailInvalidException;
 import com.example.shopzy.util.error.IdInvalidException;
+import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 
@@ -63,8 +67,9 @@ public class UserController {
 
     @GetMapping("/users")
     @ApiMessage("fetch all users")
-    public ResponseEntity<List<ResUserDTO>> getAllUsers() {
-        return ResponseEntity.ok(this.userService.getAllUsers());
+    public ResponseEntity<ResultPaginationDTO> getAllUsers(
+            @Filter Specification<User> spec, Pageable pageable) {
+        return ResponseEntity.ok(this.userService.getAllUsers(spec, pageable));
     }
 
     @GetMapping("/users/{id}")

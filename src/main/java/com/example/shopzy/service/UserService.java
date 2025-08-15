@@ -3,7 +3,11 @@ package com.example.shopzy.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.shopzy.domain.User;
@@ -12,6 +16,7 @@ import com.example.shopzy.domain.request.ReqUpdateUserDTO;
 import com.example.shopzy.domain.response.ResCreateUserDTO;
 import com.example.shopzy.domain.response.ResUpdateUserDTO;
 import com.example.shopzy.domain.response.ResUserDTO;
+import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.repository.UserRepository;
 
 @Service
@@ -27,15 +32,33 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public List<ResUserDTO> getAllUsers() {
-        List<User> users = this.userRepository.findAll();
-        List<ResUserDTO> resUserDTO = new ArrayList<>();
+    public ResultPaginationDTO getAllUsers(Specification spec, Pageable pageable) {
 
+        Page<User> pageUser = this.userRepository.findAll(spec, pageable);
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
+
+        mt.setPage(pageable.getPageNumber());
+        mt.setPageSize(pageable.getPageSize());
+
+        mt.setPages(pageUser.getTotalPages());
+        mt.setTotal(pageUser.getTotalElements());
+
+        rs.setMeta(mt);
+
+        // convert -> user
+        List<User> users = pageUser.getContent();
+        List<ResUserDTO> resUserDTOs = new ArrayList<>();
         for (User user : users) {
-            resUserDTO.add(convertToResUserDTO(user));
+            resUserDTOs.add(convertToResUserDTO(user));
         }
+        rs.setResult(resUserDTOs);
 
-        return resUserDTO;
+        // List<ResUserDTO> listUser = pageUser.getContent()
+        // .stream().map(item -> this.convertToResUserDTO(item))
+        // .collect(Collectors.toList());
+        // rs.setResult(listUser);
+        return rs;
     }
 
     public User getUserById(Long id) {

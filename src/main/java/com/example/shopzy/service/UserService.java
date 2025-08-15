@@ -60,6 +60,12 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
+    // lấy email để truyền sang UserDetailCustom.java
+
+    public User handleGetUserByUsername(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
     // convert req create
     public User convertToReqCreateUserDTO(ReqCreateUserDTO userReq) {
 
@@ -90,7 +96,6 @@ public class UserService {
         return res;
     }
 
-
     // convert req update
     public User convertToReqUpdateUserDTO(ReqUpdateUserDTO userDTO) {
 
@@ -116,6 +121,18 @@ public class UserService {
         res.setUpdatedAt(user.getUpdatedAt());
 
         return res;
+    }
+
+    public void updateUserToken(String token, String email) {
+        User currentUser = this.handleGetUserByUsername(email);
+        if (currentUser != null) {
+            currentUser.setRefreshToken(token);
+            this.userRepository.save(currentUser);
+        }
+    }
+
+    public User getUserByRefreshTokenAndEmail(String token, String email) {
+        return this.userRepository.findByRefreshTokenAndEmail(token, email);
     }
 
 }

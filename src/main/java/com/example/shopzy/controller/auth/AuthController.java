@@ -2,12 +2,14 @@ package com.example.shopzy.controller.auth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopzy.domain.User;
+import com.example.shopzy.domain.request.ReqCreateUserDTO;
 import com.example.shopzy.domain.request.ReqLoginDTO;
+import com.example.shopzy.domain.response.ResCreateUserDTO;
 import com.example.shopzy.domain.response.ResLoginDTO;
 import com.example.shopzy.service.UserService;
 import com.example.shopzy.util.SecurityUtil;
 import com.example.shopzy.util.annotation.ApiMessage;
+import com.example.shopzy.util.error.EmailInvalidException;
 import com.example.shopzy.util.error.IdInvalidException;
 
 import jakarta.validation.Valid;
@@ -33,15 +38,17 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${shopzy.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
-            SecurityUtil securityUtil, UserService userService) {
+            SecurityUtil securityUtil, UserService userService, PasswordEncoder passwordEncoder) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/auth/login")
@@ -188,5 +195,23 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
                 .body(null);
+    }
+
+    @PostMapping("/auth/register")
+    @ApiMessage("register a user")
+    public ResponseEntity<ResCreateUserDTO> register(@Valid @RequestBody ReqCreateUserDTO dto)
+            throws EmailInvalidException {
+
+        User user = this.userService.convertToReqCreateUserDTO(dto);
+
+        boolean isEmailExists = this.userService.isEmailExists(user.getEmail());
+        if (isEmailExists) {
+            throw new EmailInvalidException("Email: " + user.getEmail() + " đã tồn tại");
+        }
+        // hardpasswd
+        String hardPassword = this.passwordEncoder.encode(dto.getPassword());
+        user.setPassword(hardPassword);
+        User userCreate = this.userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(userCreate));
     }
 }

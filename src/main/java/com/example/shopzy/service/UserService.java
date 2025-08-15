@@ -1,5 +1,6 @@
 package com.example.shopzy.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import com.example.shopzy.domain.request.ReqCreateUserDTO;
 import com.example.shopzy.domain.request.ReqUpdateUserDTO;
 import com.example.shopzy.domain.response.ResCreateUserDTO;
 import com.example.shopzy.domain.response.ResUpdateUserDTO;
+import com.example.shopzy.domain.response.ResUserDTO;
 import com.example.shopzy.repository.UserRepository;
 
 @Service
@@ -25,8 +27,15 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return this.userRepository.findAll();
+    public List<ResUserDTO> getAllUsers() {
+        List<User> users = this.userRepository.findAll();
+        List<ResUserDTO> resUserDTO = new ArrayList<>();
+
+        for (User user : users) {
+            resUserDTO.add(convertToResUserDTO(user));
+        }
+
+        return resUserDTO;
     }
 
     public User getUserById(Long id) {
@@ -87,7 +96,6 @@ public class UserService {
         res.setId(user.getId());
         res.setName(user.getName());
         res.setFullName(user.getFullName());
-        res.setPassword(user.getPassword());
         res.setEmail(user.getEmail());
         res.setPhoneNumber(user.getPhoneNumber());
         res.setStatus(user.getStatus());
@@ -120,6 +128,24 @@ public class UserService {
         res.setStatus(user.getStatus());
         res.setUpdatedAt(user.getUpdatedAt());
 
+        return res;
+    }
+
+    // convert res get user/users
+    public ResUserDTO convertToResUserDTO(User user) {
+
+        ResUserDTO res = new ResUserDTO();
+
+        res.setId(user.getId());
+        res.setName(user.getName());
+        res.setFullName(user.getFullName());
+        res.setEmail(user.getEmail());
+        res.setPhoneNumber(user.getPhoneNumber());
+        res.setStatus(user.getStatus());
+        res.setCreatedAt(user.getCreatedAt());
+        res.setCreatedBy(user.getCreatedBy());
+        res.setUpdatedAt(user.getUpdatedAt());
+        res.setUpdatedBy(user.getUpdatedBy());
         return res;
     }
 

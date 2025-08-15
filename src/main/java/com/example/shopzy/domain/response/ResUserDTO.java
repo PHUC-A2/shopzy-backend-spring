@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class ResCreateUserDTO {
-
+public class ResUserDTO {
+    
     private Long id;
     private String name;
     private String fullName;
@@ -21,4 +20,7 @@ public class ResCreateUserDTO {
     private String phoneNumber;
     private UserStatusEnum status = UserStatusEnum.ACTIVE; // mặc định cho user đang hoạt động
     private Instant createdAt;
+    private Instant updatedAt;
+    private String createdBy;
+    private String updatedBy;
 }

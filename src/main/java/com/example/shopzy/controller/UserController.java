@@ -19,6 +19,7 @@ import com.example.shopzy.domain.request.ReqCreateUserDTO;
 import com.example.shopzy.domain.request.ReqUpdateUserDTO;
 import com.example.shopzy.domain.response.ResCreateUserDTO;
 import com.example.shopzy.domain.response.ResUpdateUserDTO;
+import com.example.shopzy.domain.response.ResUserDTO;
 import com.example.shopzy.service.UserService;
 import com.example.shopzy.util.annotation.ApiMessage;
 import com.example.shopzy.util.error.EmailInvalidException;
@@ -62,19 +63,19 @@ public class UserController {
 
     @GetMapping("/users")
     @ApiMessage("fetch all users")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<ResUserDTO>> getAllUsers() {
         return ResponseEntity.ok(this.userService.getAllUsers());
     }
 
     @GetMapping("/users/{id}")
     @ApiMessage("fetch user by id")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) throws IdInvalidException {
+    public ResponseEntity<ResUserDTO> getUserById(@PathVariable("id") Long id) throws IdInvalidException {
 
         User user = this.userService.getUserById(id);
         if (user == null) {
             throw new IdInvalidException("User với ID = " + id + " không tồn tại");
         }
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(this.userService.convertToResUserDTO(user));
     }
 
     @PutMapping("/users")

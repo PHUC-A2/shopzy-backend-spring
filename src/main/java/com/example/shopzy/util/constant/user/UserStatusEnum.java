@@ -1,4 +1,4 @@
-package com.example.shopzy.util.constant;
+package com.example.shopzy.util.constant.user;
 
 public enum UserStatusEnum {
     ACTIVE, // Hoạt động bình thường

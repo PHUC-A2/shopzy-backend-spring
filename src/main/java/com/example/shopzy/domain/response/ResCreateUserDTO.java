@@ -2,7 +2,7 @@ package com.example.shopzy.domain.response;
 
 import java.time.Instant;
 
-import com.example.shopzy.util.constant.UserStatusEnum;
+import com.example.shopzy.util.constant.user.UserStatusEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

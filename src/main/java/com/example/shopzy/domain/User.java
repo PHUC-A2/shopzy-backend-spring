@@ -3,7 +3,7 @@ package com.example.shopzy.domain;
 import java.time.Instant;
 
 import com.example.shopzy.util.SecurityUtil;
-import com.example.shopzy.util.constant.UserStatusEnum;
+import com.example.shopzy.util.constant.user.UserStatusEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,22 +48,14 @@ public class User {
 
     // dùng để cập nhật người tạo ra người dùng
     @PrePersist
-    public void handelBeforeCreate() {
-        // dùng this vì phạm vi là class
-        // người tạo ra công ty
-        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
+    public void handleBeforeCreate() {
+        this.createdBy = SecurityUtil.getCurrentUserLogin().orElse("");
         this.createdAt = Instant.now(); // tạo ra lúc
     }
 
     @PreUpdate
-    public void handelBeforeUpdate() {
-        // dùng this vì phạm vi là class
-        // người sửa ra công ty
-        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
+    public void handleBeforeUpdate() {
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().orElse("");
         this.updatedAt = Instant.now(); // tạo ra lúc
     }
 

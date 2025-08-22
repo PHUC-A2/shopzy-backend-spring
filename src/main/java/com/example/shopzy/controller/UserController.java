@@ -1,7 +1,5 @@
 package com.example.shopzy.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -53,15 +51,13 @@ public class UserController {
         if (isEmailExists) {
             throw new EmailInvalidException("Email: " + user.getEmail() + " đã tồn tại");
         }
-        System.out.println("Pass  truoc khi hard: " + user.getPassword());
 
         // hardpasswd
         String hardPassword = this.passwordEncoder.encode(dto.getPassword());
         user.setPassword(hardPassword);
-        System.out.println("Pass sau khi hard: " + user.getPassword());
+
 
         User userCreate = this.userService.createUser(user);
-        System.out.println("Hard pass thanh cong: " + user.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(userCreate));
     }
 

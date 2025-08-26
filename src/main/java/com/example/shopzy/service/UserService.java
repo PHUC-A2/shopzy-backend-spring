@@ -31,7 +31,7 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public ResultPaginationDTO getAllUsers(Specification spec, Pageable pageable) {
+    public ResultPaginationDTO getAllUsers(Specification<User> spec, Pageable pageable) {
 
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();

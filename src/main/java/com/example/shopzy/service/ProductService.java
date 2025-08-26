@@ -1,13 +1,10 @@
 package com.example.shopzy.service;
 
-import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import com.example.shopzy.domain.Product;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.repository.ProductRepository;
@@ -25,7 +22,7 @@ public class ProductService {
         return this.productRepository.save(product);
     }
 
-    public ResultPaginationDTO getAllProducts(Specification spec, Pageable pageable) {
+    public ResultPaginationDTO getAllProducts(Specification<Product> spec, Pageable pageable) {
 
         Page<Product> pageProduct = this.productRepository.findAll(spec, pageable);
 

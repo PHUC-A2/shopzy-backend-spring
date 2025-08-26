@@ -1,7 +1,5 @@
 package com.example.shopzy.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.shopzy.domain.Product;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.service.ProductService;
@@ -41,7 +38,7 @@ public class ProductController {
     @GetMapping("/products")
     @ApiMessage("Get all product")
     public ResponseEntity<ResultPaginationDTO> getAllProducts(
-            @Filter Specification spec, Pageable pageable) {
+            @Filter Specification<Product> spec, Pageable pageable) {
         return ResponseEntity.ok(this.productService.getAllProducts(spec, pageable));
     }
 

@@ -18,7 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 public class FormatRestResponse implements ResponseBodyAdvice<Object> {
 
     @Override
-    public boolean supports(MethodParameter returnType, Class converterType) {
+    public boolean supports(MethodParameter returnType,
+            Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> converterType) {
         return true;
     }
 
@@ -27,7 +28,7 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
             Object body,
             MethodParameter returnType,
             MediaType selectedContentType,
-            Class selectedConverterType,
+            Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> selectedConverterType,
             ServerHttpRequest request,
             ServerHttpResponse response) {
         HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();

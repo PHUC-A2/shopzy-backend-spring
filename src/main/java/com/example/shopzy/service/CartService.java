@@ -27,7 +27,7 @@ public class CartService {
         ResultPaginationDTO rs = new ResultPaginationDTO();
         ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
 
-        mt.setPage(pageable.getPageNumber());
+        mt.setPage(pageable.getPageNumber() + 1);
         mt.setPageSize(pageable.getPageSize());
 
         mt.setPages(pageCart.getTotalPages());

@@ -32,7 +32,7 @@ public class OrderItemService {
         ResultPaginationDTO rs = new ResultPaginationDTO();
         ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
 
-        mt.setPage(pageable.getPageNumber());
+        mt.setPage(pageable.getPageNumber() + 1);
         mt.setPageSize(pageable.getPageSize());
         mt.setPages(pageOrderItem.getTotalPages());
         mt.setTotal(pageOrderItem.getTotalElements());

@@ -1,17 +1,21 @@
 package com.example.shopzy.domain;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.example.shopzy.util.SecurityUtil;
 import com.example.shopzy.util.constant.user.UserStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -40,6 +44,10 @@ public class User {
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Cart> carts;
 
     private Instant createdAt;
     private Instant updatedAt;

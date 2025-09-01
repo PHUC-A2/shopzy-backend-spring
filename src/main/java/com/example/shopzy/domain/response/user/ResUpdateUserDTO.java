@@ -1,4 +1,4 @@
-package com.example.shopzy.domain.response;
+package com.example.shopzy.domain.response.user;
 
 import java.time.Instant;
 

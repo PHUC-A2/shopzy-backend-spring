@@ -10,12 +10,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.shopzy.domain.User;
-import com.example.shopzy.domain.request.ReqCreateUserDTO;
-import com.example.shopzy.domain.request.ReqUpdateUserDTO;
-import com.example.shopzy.domain.response.ResCreateUserDTO;
-import com.example.shopzy.domain.response.ResUpdateUserDTO;
-import com.example.shopzy.domain.response.ResUserDTO;
+import com.example.shopzy.domain.request.user.ReqCreateUserDTO;
+import com.example.shopzy.domain.request.user.ReqUpdateUserDTO;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
+import com.example.shopzy.domain.response.user.ResCreateUserDTO;
+import com.example.shopzy.domain.response.user.ResUpdateUserDTO;
+import com.example.shopzy.domain.response.user.ResUserDTO;
 import com.example.shopzy.repository.UserRepository;
 
 @Service

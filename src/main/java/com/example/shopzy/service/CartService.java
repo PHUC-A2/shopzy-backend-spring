@@ -1,25 +1,36 @@
 package com.example.shopzy.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.example.shopzy.domain.Cart;
+import com.example.shopzy.domain.User;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
+import com.example.shopzy.domain.response.cart.ResCartDTO;
 import com.example.shopzy.repository.CartRepository;
 import com.example.shopzy.util.error.IdInvalidException;
 
 @Service
 public class CartService {
     private final CartRepository cartRepository;
+    private final UserService userService;
 
-    public CartService(CartRepository cartRepository) {
+    public CartService(CartRepository cartRepository, UserService userService) {
         this.cartRepository = cartRepository;
+        this.userService = userService;
     }
 
     public Cart createCart(Cart cart) {
-        return this.cartRepository.save(cart);
+        User user = this.userService.getUserById(cart.getUser().getId());
+        if (user != null) {
+            cart.setUser(user);
+            return this.cartRepository.save(cart);
+        }
+        return null;
     }
 
     public ResultPaginationDTO getAllCarts(Specification<Cart> spec, Pageable pageable) {
@@ -34,7 +45,16 @@ public class CartService {
         mt.setTotal(pageCart.getTotalElements());
 
         rs.setMeta(mt);
-        rs.setResult(pageCart.getContent());
+
+        // convert
+
+        List<Cart> carts = pageCart.getContent();
+        List<ResCartDTO> resCartDTOs = new ArrayList<>();
+        for (Cart cart : carts) {
+            resCartDTOs.add(convertToResCartDTO(cart));
+        }
+        rs.setResult(resCartDTOs);
+        // rs.setResult(pageCart.getContent());
 
         return rs;
 
@@ -52,12 +72,39 @@ public class CartService {
 
     public Cart updateCart(Cart cartReq) throws IdInvalidException {
         Cart cart = this.getCartById(cartReq.getId());
-        cart.setUserId(cartReq.getUserId());
+        User user = this.userService.getUserById(cartReq.getUser().getId());
+        if (user != null) {
+            cart.setUser(user);
+        } else {
+            return null;
+        }
         return this.cartRepository.save(cart);
     }
 
     public void deleteCart(Long id) throws IdInvalidException {
         Cart cart = this.getCartById(id);
         this.cartRepository.deleteById(cart.getId());
+    }
+
+    public ResCartDTO convertToResCartDTO(Cart cart) {
+        ResCartDTO res = new ResCartDTO();
+        res.setId(cart.getId());
+        res.setCreatedAt(cart.getCreatedAt());
+        res.setCreatedBy(cart.getCreatedBy());
+        res.setUpdatedAt(cart.getUpdatedAt());
+        res.setUpdatedBy(cart.getUpdatedBy());
+
+        // check user có trong DB ?
+        if (cart.getUser() != null) {
+            res.setUser(new ResCartDTO.CartUser(
+                    cart.getUser().getId(),
+                    cart.getUser().getName(),
+                    cart.getUser().getFullName(),
+                    cart.getUser().getEmail(),
+                    cart.getUser().getPhoneNumber()));
+        } else {
+            res.setUser(null);
+        }
+        return res;
     }
 }

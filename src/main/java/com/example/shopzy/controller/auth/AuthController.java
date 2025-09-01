@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopzy.domain.User;
-import com.example.shopzy.domain.request.ReqCreateUserDTO;
 import com.example.shopzy.domain.request.ReqLoginDTO;
-import com.example.shopzy.domain.response.ResCreateUserDTO;
+import com.example.shopzy.domain.request.user.ReqCreateUserDTO;
 import com.example.shopzy.domain.response.ResLoginDTO;
+import com.example.shopzy.domain.response.user.ResCreateUserDTO;
 import com.example.shopzy.service.UserService;
 import com.example.shopzy.util.SecurityUtil;
 import com.example.shopzy.util.annotation.ApiMessage;

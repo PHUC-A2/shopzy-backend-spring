@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopzy.domain.User;
-import com.example.shopzy.domain.request.ReqCreateUserDTO;
-import com.example.shopzy.domain.request.ReqUpdateUserDTO;
-import com.example.shopzy.domain.response.ResCreateUserDTO;
-import com.example.shopzy.domain.response.ResUpdateUserDTO;
-import com.example.shopzy.domain.response.ResUserDTO;
+import com.example.shopzy.domain.request.user.ReqCreateUserDTO;
+import com.example.shopzy.domain.request.user.ReqUpdateUserDTO;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
+import com.example.shopzy.domain.response.user.ResCreateUserDTO;
+import com.example.shopzy.domain.response.user.ResUpdateUserDTO;
+import com.example.shopzy.domain.response.user.ResUserDTO;
 import com.example.shopzy.service.UserService;
 import com.example.shopzy.util.annotation.ApiMessage;
 import com.example.shopzy.util.error.EmailInvalidException;
@@ -55,7 +55,6 @@ public class UserController {
         // hardpasswd
         String hardPassword = this.passwordEncoder.encode(dto.getPassword());
         user.setPassword(hardPassword);
-
 
         User userCreate = this.userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(userCreate));

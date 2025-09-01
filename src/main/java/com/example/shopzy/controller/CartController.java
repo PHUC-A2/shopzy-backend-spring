@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopzy.domain.Cart;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
+import com.example.shopzy.domain.response.cart.ResCartDTO;
 import com.example.shopzy.service.CartService;
 import com.example.shopzy.util.annotation.ApiMessage;
 import com.example.shopzy.util.error.IdInvalidException;
@@ -32,8 +33,9 @@ public class CartController {
 
     @PostMapping("/carts")
     @ApiMessage("Create a cart")
-    public ResponseEntity<Cart> createcart(@RequestBody Cart cartReq) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.cartService.createCart(cartReq));
+    public ResponseEntity<ResCartDTO> createcart(@RequestBody Cart cartReq) {
+        Cart created = this.cartService.createCart(cartReq);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.cartService.convertToResCartDTO(created));
     }
 
     @GetMapping("/carts")
@@ -44,15 +46,15 @@ public class CartController {
 
     @GetMapping("/carts/{id}")
     @ApiMessage("Get cart by id")
-    public ResponseEntity<Cart> getcartById(@PathVariable("id") Long id) throws IdInvalidException {
-        return ResponseEntity.ok(this.cartService.getCartById(id));
+    public ResponseEntity<ResCartDTO> getcartById(@PathVariable("id") Long id) throws IdInvalidException {
+        return ResponseEntity.ok(this.cartService.convertToResCartDTO(this.cartService.getCartById(id)));
     }
 
     @PutMapping("/carts")
     @ApiMessage("Update a cart")
-    public ResponseEntity<Cart> updatecart(@RequestBody Cart cartReq) throws IdInvalidException {
+    public ResponseEntity<ResCartDTO> updatecart(@RequestBody Cart cartReq) throws IdInvalidException {
         Cart cart = this.cartService.updateCart(cartReq);
-        return ResponseEntity.ok(cart);
+        return ResponseEntity.ok(this.cartService.convertToResCartDTO(cart));
     }
 
     @DeleteMapping("/carts/{id}")

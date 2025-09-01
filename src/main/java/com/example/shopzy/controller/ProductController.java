@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.shopzy.domain.Product;
+
+import com.example.shopzy.domain.entity.Product;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.service.ProductService;
 import com.example.shopzy.util.annotation.ApiMessage;

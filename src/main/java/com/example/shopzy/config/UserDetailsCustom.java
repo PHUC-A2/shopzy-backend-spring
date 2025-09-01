@@ -23,7 +23,7 @@ public class UserDetailsCustom implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // dùng cách này để tránh nhầm với của Security
-        com.example.shopzy.domain.User user = this.userService.handleGetUserByUsername(username);
+        com.example.shopzy.domain.entity.User user = this.userService.handleGetUserByUsername(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("Username/password không hợp lệ");

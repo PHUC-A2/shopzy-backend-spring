@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.example.shopzy.domain.Order;
+import com.example.shopzy.domain.entity.Order;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.repository.OrderRepository;
 import com.example.shopzy.util.error.IdInvalidException;

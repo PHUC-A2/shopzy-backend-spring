@@ -7,8 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import com.example.shopzy.domain.Cart;
-import com.example.shopzy.domain.User;
+
+import com.example.shopzy.domain.entity.Cart;
+import com.example.shopzy.domain.entity.User;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.domain.response.cart.ResCartDTO;
 import com.example.shopzy.repository.CartRepository;

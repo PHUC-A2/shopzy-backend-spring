@@ -1,4 +1,4 @@
-package com.example.shopzy.domain;
+package com.example.shopzy.domain.entity;
 
 import java.time.Instant;
 

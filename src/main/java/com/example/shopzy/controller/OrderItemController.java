@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.shopzy.domain.OrderItem;
+import com.example.shopzy.domain.entity.OrderItem;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.service.OrderItemService;
 import com.example.shopzy.util.annotation.ApiMessage;

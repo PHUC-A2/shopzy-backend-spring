@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.shopzy.domain.Cart;
+import com.example.shopzy.domain.entity.Cart;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.domain.response.cart.ResCartDTO;
 import com.example.shopzy.service.CartService;

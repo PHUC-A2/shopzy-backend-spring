@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.example.shopzy.domain.User;
+import com.example.shopzy.domain.entity.User;
 import com.example.shopzy.domain.request.user.ReqCreateUserDTO;
 import com.example.shopzy.domain.request.user.ReqUpdateUserDTO;
 import com.example.shopzy.domain.response.ResultPaginationDTO;

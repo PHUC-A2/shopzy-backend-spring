@@ -1,21 +1,13 @@
-package com.example.shopzy.domain;
+package com.example.shopzy.domain.entity;
 
 import java.time.Instant;
-import java.util.List;
 
 import com.example.shopzy.util.SecurityUtil;
-import com.example.shopzy.util.constant.user.UserStatusEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -23,31 +15,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * 4. CartItem (Sản phẩm trong giỏ hàng)
+    id : Mã item
+    cartId : FK → Cart
+    productId : FK → Product
+    quantity : Số lượng
+    createdAt, createdBy, updatedAt, updatedBy
+
+ * 
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
-
-public class User {
+@Table(name = "cart_items")
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String fullName;
-    private String email;
-    private String password;
-    private String phoneNumber;
-
-    @Enumerated(EnumType.STRING)
-    private UserStatusEnum status = UserStatusEnum.ACTIVE; // mặc định cho user đang hoạt động
-
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String refreshToken;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Cart> carts;
+    private Long cartId;
+    private Long productId;
+    private int quantity;
 
     private Instant createdAt;
     private Instant updatedAt;
@@ -66,5 +55,4 @@ public class User {
         this.updatedBy = SecurityUtil.getCurrentUserLogin().orElse("");
         this.updatedAt = Instant.now(); // tạo ra lúc
     }
-
 }

@@ -6,7 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import com.example.shopzy.domain.CartItem;
+
+import com.example.shopzy.domain.entity.CartItem;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.repository.CartItemRepository;
 import com.example.shopzy.util.error.IdInvalidException;

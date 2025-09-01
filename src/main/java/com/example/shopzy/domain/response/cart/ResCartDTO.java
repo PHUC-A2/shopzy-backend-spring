@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResCartDTO {
     private Long id;
-    private CartUser user;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+    private CartUser user;
 
     @Data
     @NoArgsConstructor

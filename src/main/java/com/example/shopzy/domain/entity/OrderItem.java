@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -36,7 +38,6 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long orderId;
-    private Long productId;
     private int quantity;
     private double unitPrice; // giá tại thời điểm bán
 
@@ -44,6 +45,10 @@ public class OrderItem {
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+
+    @JoinColumn(name = "product_id")
+    @ManyToOne
+    private Product product;
 
     // dùng để cập nhật người tạo ra người dùng
     @PrePersist

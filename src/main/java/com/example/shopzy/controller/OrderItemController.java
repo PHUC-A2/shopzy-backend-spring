@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.shopzy.domain.entity.OrderItem;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
+import com.example.shopzy.domain.response.orderitem.ResOrderItemDTO;
 import com.example.shopzy.service.OrderItemService;
 import com.example.shopzy.util.annotation.ApiMessage;
 import com.example.shopzy.util.error.IdInvalidException;
@@ -26,8 +27,10 @@ public class OrderItemController {
     // Create
     @PostMapping("/order-items")
     @ApiMessage("Create an order item")
-    public ResponseEntity<OrderItem> createOrderItem(@RequestBody OrderItem orderItemReq) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.orderItemService.createOrderItem(orderItemReq));
+    public ResponseEntity<ResOrderItemDTO> createOrderItem(@RequestBody OrderItem orderItemReq)
+            throws IdInvalidException {
+        OrderItem created = this.orderItemService.createOrderItem(orderItemReq);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.orderItemService.convertToResOrderItemDTO(created));
     }
 
     // Get all
@@ -41,16 +44,18 @@ public class OrderItemController {
     // Get by ID
     @GetMapping("/order-items/{id}")
     @ApiMessage("Get order item by id")
-    public ResponseEntity<OrderItem> getOrderItemById(@PathVariable("id") Long id) throws IdInvalidException {
-        return ResponseEntity.ok(this.orderItemService.getOrderItemById(id));
+    public ResponseEntity<ResOrderItemDTO> getOrderItemById(@PathVariable("id") Long id) throws IdInvalidException {
+        return ResponseEntity
+                .ok(this.orderItemService.convertToResOrderItemDTO(this.orderItemService.getOrderItemById(id)));
     }
 
     // Update
     @PutMapping("/order-items")
     @ApiMessage("Update an order item")
-    public ResponseEntity<OrderItem> updateOrderItem(@RequestBody OrderItem orderItemReq) throws IdInvalidException {
-        OrderItem orderItem = this.orderItemService.updateOrderItem(orderItemReq);
-        return ResponseEntity.ok(orderItem);
+    public ResponseEntity<ResOrderItemDTO> updateOrderItem(@RequestBody OrderItem orderItemReq)
+            throws IdInvalidException {
+        OrderItem updated = this.orderItemService.updateOrderItem(orderItemReq);
+        return ResponseEntity.ok(this.orderItemService.convertToResOrderItemDTO(updated));
     }
 
     // Delete

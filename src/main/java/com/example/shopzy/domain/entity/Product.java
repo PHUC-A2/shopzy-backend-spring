@@ -72,6 +72,10 @@ public class Product {
     @JsonIgnore
     private List<CartItem> cartItems;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<OrderItem> orderItems;
+
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;

@@ -9,8 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.example.shopzy.domain.entity.Cart;
 import com.example.shopzy.domain.entity.CartItem;
 import com.example.shopzy.domain.entity.Product;
+import com.example.shopzy.domain.entity.User;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.domain.response.cartitem.ResCartItemDTO;
 import com.example.shopzy.repository.CartItemRepository;
@@ -20,16 +22,25 @@ import com.example.shopzy.util.error.IdInvalidException;
 public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final ProductService productService;
+    private final CartService cartService;
 
-    public CartItemService(CartItemRepository cartItemRepository, ProductService productService) {
+    public CartItemService(CartItemRepository cartItemRepository, ProductService productService,
+            CartService cartService) {
         this.cartItemRepository = cartItemRepository;
         this.productService = productService;
+        this.cartService = cartService;
     }
 
     public CartItem createCartItem(CartItem cartItem) throws IdInvalidException {
+
         // check product trước nếu có thì truyền vào id không thì trả null
         Product product = this.productService.getProductById(cartItem.getProduct().getId());
         cartItem.setProduct(product);
+
+        // check cart + user(trong cart)
+        Cart cart = this.cartService.getCartById(cartItem.getCart().getId());
+        cartItem.setCart(cart);
+
         return this.cartItemRepository.save(cartItem);
     }
 
@@ -69,13 +80,18 @@ public class CartItemService {
 
     public CartItem updateCartItem(CartItem cartItemReq) throws IdInvalidException {
         CartItem cartItem = this.getCartItemById(cartItemReq.getId());
-        cartItem.setCartId(cartItemReq.getCartId());
+        // cartItem.setCartId(cartItemReq.getCartId());
         cartItemReq.setQuantity(cartItemReq.getQuantity());
 
         // check product nếu có trong DB thì set không thì ném ra ex (đã xử lý ở
         // getProductById)
         Product product = this.productService.getProductById(cartItemReq.getProduct().getId());
         cartItem.setProduct(product);
+
+        // check cart
+        Cart cart = this.cartService.getCartById(cartItem.getCart().getId());
+        cartItem.setCart(cart);
+
         return this.cartItemRepository.save(cartItem);
     }
 
@@ -89,7 +105,6 @@ public class CartItemService {
         ResCartItemDTO res = new ResCartItemDTO();
 
         res.setId(cartItem.getId());
-        res.setCartId(cartItem.getCartId()); // cart tương tự như product
         res.setQuantity(cartItem.getQuantity());
         res.setCreatedAt(cartItem.getCreatedAt());
         res.setCreatedBy(cartItem.getCreatedBy());
@@ -109,6 +124,26 @@ public class CartItemService {
                     cartItem.getProduct().getImageUrl(),
                     cartItem.getProduct().getSize(),
                     cartItem.getProduct().getColor()));
+        }
+
+        // check cart
+        if (cartItem.getCart() != null) {
+
+            // check user để lấy user vì trong cart chứa field obj user
+            User user = cartItem.getCart().getUser();
+            ResCartItemDTO.CartItemUser cartItemUser = null;
+            if (user != null) {
+                cartItemUser = new ResCartItemDTO.CartItemUser(
+                        user.getId(),
+                        user.getName(),
+                        user.getFullName(),
+                        user.getEmail(),
+                        user.getPhoneNumber());
+            }
+
+            res.setCart(new ResCartItemDTO.CartItemCart(
+                    cartItem.getCart().getId(),
+                    cartItemUser));
         }
 
         return res;

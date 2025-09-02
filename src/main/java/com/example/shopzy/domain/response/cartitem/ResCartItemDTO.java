@@ -1,7 +1,6 @@
 package com.example.shopzy.domain.response.cartitem;
 
 import java.time.Instant;
-
 import com.example.shopzy.util.constant.product.ProductConditionEnum;
 import com.example.shopzy.util.constant.product.ProductStatusEnum;
 import lombok.AllArgsConstructor;
@@ -13,13 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResCartItemDTO {
     private Long id;
-    private Long cartId;
     private int quantity;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
     private CartItemProduct product;
+    private CartItemCart cart;
 
     @Data
     @NoArgsConstructor
@@ -36,5 +35,25 @@ public class ResCartItemDTO {
         private String imageUrl;
         private String size;
         private String color;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CartItemCart {
+
+        private Long id;
+        private CartItemUser user;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CartItemUser {
+        private Long id;
+        private String name;
+        private String fullName;
+        private String email;
+        private String phoneNumber;
     }
 }

@@ -46,7 +46,7 @@ public class ProductController {
     @GetMapping("/products/{id}")
     @ApiMessage("Get product by id")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws IdInvalidException {
-        return ResponseEntity.ok(this.productService.getProductByID(id));
+        return ResponseEntity.ok(this.productService.getProductById(id));
     }
 
     @PutMapping("/products")

@@ -28,7 +28,7 @@ public class CartItemService {
 
     public CartItem createCartItem(CartItem cartItem) throws IdInvalidException {
         // check product trước nếu có thì truyền vào id không thì trả null
-        Product product = this.productService.getProductByID(cartItem.getProduct().getId());
+        Product product = this.productService.getProductById(cartItem.getProduct().getId());
         cartItem.setProduct(product);
         return this.cartItemRepository.save(cartItem);
     }
@@ -73,8 +73,8 @@ public class CartItemService {
         cartItemReq.setQuantity(cartItemReq.getQuantity());
 
         // check product nếu có trong DB thì set không thì ném ra ex (đã xử lý ở
-        // getProductByID)
-        Product product = this.productService.getProductByID(cartItemReq.getProduct().getId());
+        // getProductById)
+        Product product = this.productService.getProductById(cartItemReq.getProduct().getId());
         cartItem.setProduct(product);
         return this.cartItemRepository.save(cartItem);
     }

@@ -42,7 +42,7 @@ public class ProductService {
         return rs;
     }
 
-    public Product getProductByID(Long id) throws IdInvalidException {
+    public Product getProductById(Long id) throws IdInvalidException {
         Optional<Product> productOptional = this.productRepository.findById(id);
         if (productOptional.isPresent()) {
             return productOptional.get();
@@ -52,7 +52,7 @@ public class ProductService {
     }
 
     public Product updateProduct(Product productReq) throws IdInvalidException {
-        Product product = this.getProductByID(productReq.getId());
+        Product product = this.getProductById(productReq.getId());
 
         if (product == null) {
             throw new IdInvalidException("Không tìm thấy Product với ID = " + productReq.getId());
@@ -73,7 +73,7 @@ public class ProductService {
 
     public void deleteProduct(Long id) throws IdInvalidException {
 
-        Product product = this.getProductByID(id);
+        Product product = this.getProductById(id);
         if (product == null) {
             throw new IdInvalidException("Không tìm thấy Product với ID = " + id);
         }

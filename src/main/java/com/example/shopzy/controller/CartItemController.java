@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopzy.domain.entity.CartItem;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
+import com.example.shopzy.domain.response.cartitem.ResCartItemDTO;
 import com.example.shopzy.service.CartItemService;
 import com.example.shopzy.util.annotation.ApiMessage;
 import com.example.shopzy.util.error.IdInvalidException;
@@ -31,9 +32,9 @@ public class CartItemController {
 
     @PostMapping("/cart-items")
     @ApiMessage("Create cart item")
-    public ResponseEntity<CartItem> createCartItem(@RequestBody CartItem cartItem) {
+    public ResponseEntity<ResCartItemDTO> createCartItem(@RequestBody CartItem cartItem) throws IdInvalidException {
         CartItem created = this.cartItemService.createCartItem(cartItem);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.cartItemService.convertToResCartItemDTO(created));
     }
 
     @GetMapping("/cart-items")
@@ -45,15 +46,16 @@ public class CartItemController {
 
     @GetMapping("/cart-items/{id}")
     @ApiMessage("Get cart item by id")
-    public ResponseEntity<CartItem> getCartItemById(@PathVariable("id") Long id) throws IdInvalidException {
-        return ResponseEntity.ok(this.cartItemService.getCartItemById(id));
+    public ResponseEntity<ResCartItemDTO> getCartItemById(@PathVariable("id") Long id) throws IdInvalidException {
+        return ResponseEntity
+                .ok(this.cartItemService.convertToResCartItemDTO(this.cartItemService.getCartItemById(id)));
     }
 
     @PutMapping("/cart-items/{id}")
     @ApiMessage("Update cart item")
-    public ResponseEntity<CartItem> updateCartItem(@RequestBody CartItem cartItem) throws IdInvalidException {
-        CartItem update = this.cartItemService.updateCartItem(cartItem);
-        return ResponseEntity.ok(update);
+    public ResponseEntity<ResCartItemDTO> updateCartItem(@RequestBody CartItem cartItem) throws IdInvalidException {
+        CartItem updated = this.cartItemService.updateCartItem(cartItem);
+        return ResponseEntity.ok(this.cartItemService.convertToResCartItemDTO(updated));
     }
 
     @DeleteMapping("/cart-items/{id}")

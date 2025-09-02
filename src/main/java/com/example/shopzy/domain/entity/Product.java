@@ -1,18 +1,22 @@
 package com.example.shopzy.domain.entity;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.example.shopzy.util.SecurityUtil;
 import com.example.shopzy.util.constant.product.ProductConditionEnum;
 import com.example.shopzy.util.constant.product.ProductStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -63,6 +67,10 @@ public class Product {
     private String imageUrl;
     private String size;
     private String color;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<CartItem> cartItems;
 
     private Instant createdAt;
     private Instant updatedAt;

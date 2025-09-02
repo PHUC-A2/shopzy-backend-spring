@@ -27,14 +27,10 @@ public class OrderService {
     }
 
     // Tạo mới Order
-    public Order createOrder(Order order) {
+    public Order createOrder(Order order) throws IdInvalidException {
         // check user
         User user = this.userService.getUserById(order.getUser().getId());
-        if (user != null) {
-            order.setUser(user);
-        } else {
-            return null;
-        }
+        order.setUser(user);
         return this.orderRepository.save(order);
     }
 
@@ -81,12 +77,7 @@ public class OrderService {
 
         // check user
         User user = this.userService.getUserById(orderReq.getUser().getId());
-        if (user != null) {
-            order.setUser(user);
-        } else {
-            order.setUser(null);
-        }
-
+        order.setUser(user);
         // cập nhật các field
         order.setStatus(orderReq.getStatus());
         order.setPaymentMethod(orderReq.getPaymentMethod());

@@ -33,7 +33,7 @@ public class CartController {
 
     @PostMapping("/carts")
     @ApiMessage("Create a cart")
-    public ResponseEntity<ResCartDTO> createcart(@RequestBody Cart cartReq) {
+    public ResponseEntity<ResCartDTO> createcart(@RequestBody Cart cartReq) throws IdInvalidException {
         Cart created = this.cartService.createCart(cartReq);
         return ResponseEntity.status(HttpStatus.CREATED).body(this.cartService.convertToResCartDTO(created));
     }

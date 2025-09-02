@@ -70,11 +70,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     @ApiMessage("fetch user by id")
     public ResponseEntity<ResUserDTO> getUserById(@PathVariable("id") Long id) throws IdInvalidException {
-
         User user = this.userService.getUserById(id);
-        if (user == null) {
-            throw new IdInvalidException("User với ID = " + id + " không tồn tại");
-        }
         return ResponseEntity.ok(this.userService.convertToResUserDTO(user));
     }
 
@@ -84,22 +80,13 @@ public class UserController {
             throws IdInvalidException {
 
         User user = this.userService.convertToReqUpdateUserDTO(dto);
-
         User userUpdate = this.userService.updateUser(user);
-        if (userUpdate == null) {
-            throw new IdInvalidException("User với ID = " + user.getId() + " không tồn tại");
-        }
         return ResponseEntity.ok(this.userService.convertToResUpdateUserDTO(userUpdate));
     }
 
     @DeleteMapping("/users/{id}")
     @ApiMessage("delete a user")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) throws IdInvalidException {
-
-        User user = this.userService.getUserById(id);
-        if (user == null) {
-            throw new IdInvalidException("User với ID = " + id + " không tồn tại");
-        }
         this.userService.deleteUser(id);
         return ResponseEntity.ok(null);
     }

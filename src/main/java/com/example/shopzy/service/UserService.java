@@ -17,6 +17,7 @@ import com.example.shopzy.domain.response.user.ResCreateUserDTO;
 import com.example.shopzy.domain.response.user.ResUpdateUserDTO;
 import com.example.shopzy.domain.response.user.ResUserDTO;
 import com.example.shopzy.repository.UserRepository;
+import com.example.shopzy.util.error.IdInvalidException;
 
 @Service
 public class UserService {
@@ -60,30 +61,28 @@ public class UserService {
         return rs;
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(Long id) throws IdInvalidException {
         Optional<User> userOptional = this.userRepository.findById(id);
         if (userOptional.isPresent()) {
             return userOptional.get();
+        } else {
+            throw new IdInvalidException("Không tìm thấy User với ID = " + id);
         }
-        return null;
     }
 
-    public User updateUser(User userReq) {
+    public User updateUser(User userReq) throws IdInvalidException {
         User user = this.getUserById(userReq.getId());
-        if (user != null) {
-            user.setName(userReq.getName());
-            user.setFullName(userReq.getFullName());
-            user.setPhoneNumber(userReq.getPhoneNumber());
-            user.setStatus(userReq.getStatus());
-            user.setUpdatedAt(userReq.getUpdatedAt());
-
-            user = this.userRepository.save(user);
-        }
-        return user;
+        user.setName(userReq.getName());
+        user.setFullName(userReq.getFullName());
+        user.setPhoneNumber(userReq.getPhoneNumber());
+        user.setStatus(userReq.getStatus());
+        user.setUpdatedAt(userReq.getUpdatedAt());
+        return this.userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
-        this.userRepository.deleteById(id);
+    public void deleteUser(Long id) throws IdInvalidException {
+        User user = this.getUserById(id);
+        this.userRepository.deleteById(user.getId());
     }
 
     // check email

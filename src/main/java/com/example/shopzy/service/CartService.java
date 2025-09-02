@@ -25,13 +25,10 @@ public class CartService {
         this.userService = userService;
     }
 
-    public Cart createCart(Cart cart) {
+    public Cart createCart(Cart cart) throws IdInvalidException {
         User user = this.userService.getUserById(cart.getUser().getId());
-        if (user != null) {
-            cart.setUser(user);
-            return this.cartRepository.save(cart);
-        }
-        return null;
+        cart.setUser(user);
+        return this.cartRepository.save(cart);
     }
 
     public ResultPaginationDTO getAllCarts(Specification<Cart> spec, Pageable pageable) {
@@ -74,11 +71,7 @@ public class CartService {
     public Cart updateCart(Cart cartReq) throws IdInvalidException {
         Cart cart = this.getCartById(cartReq.getId());
         User user = this.userService.getUserById(cartReq.getUser().getId());
-        if (user != null) {
-            cart.setUser(user);
-        } else {
-            return null;
-        }
+        cart.setUser(user);
         return this.cartRepository.save(cart);
     }
 

@@ -27,7 +27,7 @@ public class OrderController {
     // Create Order
     @PostMapping("/orders")
     @ApiMessage("Create an order")
-    public ResponseEntity<ResOrderDTO> createOrder(@RequestBody Order orderReq) {
+    public ResponseEntity<ResOrderDTO> createOrder(@RequestBody Order orderReq) throws IdInvalidException {
         Order created = this.orderService.createOrder(orderReq);
         return ResponseEntity.status(HttpStatus.CREATED).body(this.orderService.convertToResOrderDTO(created));
     }

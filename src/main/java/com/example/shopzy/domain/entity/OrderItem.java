@@ -37,7 +37,6 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long orderId;
     private int quantity;
     private double unitPrice; // giá tại thời điểm bán
 
@@ -49,6 +48,10 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     @ManyToOne
     private Product product;
+
+    @JoinColumn(name = "order_id")
+    @ManyToOne
+    private Order order;
 
     // dùng để cập nhật người tạo ra người dùng
     @PrePersist

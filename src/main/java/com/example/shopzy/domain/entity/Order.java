@@ -1,20 +1,24 @@
 package com.example.shopzy.domain.entity;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.example.shopzy.util.SecurityUtil;
 import com.example.shopzy.util.constant.order.OrderPaymentMethodEnum;
 import com.example.shopzy.util.constant.order.OrderPaymentStatusEnum;
 import com.example.shopzy.util.constant.order.OrderStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -75,6 +79,10 @@ public class Order {
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<OrderItem> orderItems;
 
     // dùng để cập nhật người tạo ra người dùng
     @PrePersist

@@ -8,8 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.example.shopzy.domain.entity.Order;
 import com.example.shopzy.domain.entity.OrderItem;
 import com.example.shopzy.domain.entity.Product;
+import com.example.shopzy.domain.entity.User;
 import com.example.shopzy.domain.response.ResultPaginationDTO;
 import com.example.shopzy.domain.response.orderitem.ResOrderItemDTO;
 import com.example.shopzy.repository.OrderItemRepository;
@@ -19,18 +22,25 @@ import com.example.shopzy.util.error.IdInvalidException;
 public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
     private final ProductService productService;
+    private final OrderService orderService;
 
-    // Create
-    public OrderItemService(OrderItemRepository orderItemRepository, ProductService productService) {
+    public OrderItemService(OrderItemRepository orderItemRepository, ProductService productService,
+            OrderService orderService) {
         this.orderItemRepository = orderItemRepository;
         this.productService = productService;
+        this.orderService = orderService;
     }
 
+    // Create
     public OrderItem createOrderItem(OrderItem orderItem) throws IdInvalidException {
 
         // check product
         Product product = this.productService.getProductById(orderItem.getProduct().getId());
         orderItem.setProduct(product);
+
+        // check order + user
+        Order order = this.orderService.getOrderById(orderItem.getOrder().getId());
+        orderItem.setOrder(order);
 
         return this.orderItemRepository.save(orderItem);
     }
@@ -76,13 +86,18 @@ public class OrderItemService {
     public OrderItem updateOrderItem(OrderItem orderItemReq) throws IdInvalidException {
         OrderItem orderItem = this.getOrderItemById(orderItemReq.getId());
 
-        orderItem.setOrderId(orderItemReq.getOrderId());
         orderItem.setQuantity(orderItemReq.getQuantity());
         orderItem.setUnitPrice(orderItemReq.getUnitPrice());
 
-        // check product 
+        // check product
         Product product = this.productService.getProductById(orderItemReq.getProduct().getId());
         orderItem.setProduct(product);
+
+        // check order
+
+        Order order = this.orderService.getOrderById(orderItemReq.getOrder().getId());
+        orderItemReq.setOrder(order);
+
         return this.orderItemRepository.save(orderItem);
     }
 
@@ -95,7 +110,7 @@ public class OrderItemService {
     public ResOrderItemDTO convertToResOrderItemDTO(OrderItem orderItem) {
         ResOrderItemDTO res = new ResOrderItemDTO();
         res.setId(orderItem.getId());
-        res.setOrderId(orderItem.getOrderId()); // tương tự xử lý như với Product
+        // res.setOrderId(orderItem.getOrderId()); // tương tự xử lý như với Product
         res.setQuantity(orderItem.getQuantity());
         res.setUnitPrice(orderItem.getUnitPrice());
         res.setCreatedAt(orderItem.getCreatedAt());
@@ -117,6 +132,36 @@ public class OrderItemService {
                     orderItem.getProduct().getSize(),
                     orderItem.getProduct().getColor()));
         }
+
+        // check order
+        if (orderItem.getOrder() != null) {
+            User user = orderItem.getOrder().getUser();
+            ResOrderItemDTO.OrderItemUser orderItemUser = null;
+
+            if (user != null) {
+                orderItemUser = new ResOrderItemDTO.OrderItemUser(
+                        user.getId(),
+                        user.getName(),
+                        user.getFullName(),
+                        user.getEmail(),
+                        user.getPhoneNumber());
+            }
+
+            res.setOrder(new ResOrderItemDTO.OrderItemOrder(
+                    orderItem.getOrder().getId(),
+                    orderItem.getOrder().getStatus(),
+                    orderItem.getOrder().getPaymentMethod(),
+                    orderItem.getOrder().getPaymentStatus(),
+                    orderItem.getOrder().getTotal(),
+                    orderItem.getOrder().getShippingAddress(),
+                    orderItem.getOrder().getShippingPhone(),
+                    orderItem.getOrder().getCreatedAt(),
+                    orderItem.getOrder().getUpdatedAt(),
+                    orderItem.getOrder().getCreatedBy(),
+                    orderItem.getOrder().getUpdatedBy(),
+                    orderItemUser));
+        }
+
         return res;
     }
 }

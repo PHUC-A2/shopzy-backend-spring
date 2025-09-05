@@ -18,7 +18,7 @@ public class ResUserDTO {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private UserStatusEnum status = UserStatusEnum.ACTIVE; // mặc định cho user đang hoạt động
+    private UserStatusEnum status;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;

@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResOrderDTO {
     private Long id;
-    private OrderStatusEnum status = OrderStatusEnum.PENDING; // mặc định đang xử lý
-    private OrderPaymentMethodEnum paymentMethod = OrderPaymentMethodEnum.COD; // mặc định thanh toán khi nhận hàng
-    private OrderPaymentStatusEnum paymentStatus = OrderPaymentStatusEnum.UNPAID;
+    private OrderStatusEnum status;
+    private OrderPaymentMethodEnum paymentMethod;
+    private OrderPaymentStatusEnum paymentStatus;
     private double total; // tổng tiền
     private String shippingAddress;
     private String shippingPhone;

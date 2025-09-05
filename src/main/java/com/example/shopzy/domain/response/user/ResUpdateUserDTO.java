@@ -17,6 +17,6 @@ public class ResUpdateUserDTO {
     private String name;
     private String fullName;
     private String phoneNumber;
-    private UserStatusEnum status = UserStatusEnum.ACTIVE; // mặc định cho user đang hoạt động
+    private UserStatusEnum status;
     private Instant updatedAt;
 }

@@ -8,5 +8,9 @@ import com.example.shopzy.domain.entity.CartItem;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long>, JpaSpecificationExecutor<CartItem> {
+    // check trùng cart + product
+    boolean existsByCartIdAndProductId(Long cartId, Long productId);
 
+    // check trùng nhưng bỏ qua item hiện tại (dùng khi update)
+    boolean existsByCartIdAndProductIdAndIdNot(Long cartId, Long productId, Long id);
 }

@@ -34,6 +34,16 @@ public class OrderItemService {
     // Create
     public OrderItem createOrderItem(OrderItem orderItem) throws IdInvalidException {
 
+        Long orderId = orderItem.getOrder().getId();
+        Long productId = orderItem.getProduct().getId();
+
+        boolean isValid = this.orderItemRepository.existsByOrderIdAndProductId(orderId, productId);
+
+        if (isValid) {
+            throw new IdInvalidException(
+                    "Product với ID = " + productId + " và Order với ID = " + orderId + " đã tồn tại");
+        }
+
         // check product
         Product product = this.productService.getProductById(orderItem.getProduct().getId());
         orderItem.setProduct(product);
@@ -86,17 +96,25 @@ public class OrderItemService {
     public OrderItem updateOrderItem(OrderItem orderItemReq) throws IdInvalidException {
         OrderItem orderItem = this.getOrderItemById(orderItemReq.getId());
 
+        Long orderId = orderItemReq.getOrder().getId();
+        Long productId = orderItemReq.getProduct().getId();
+
+        boolean exists = this.orderItemRepository.existsByOrderIdAndProductIdAndIdNot(orderId, productId,
+                orderItem.getId());
+        if (exists) {
+            throw new IdInvalidException(
+                    "Product với ID = " + productId + " và Order với ID = " + orderId + " đã tồn tại trong order khác");
+        }
         orderItem.setQuantity(orderItemReq.getQuantity());
         orderItem.setUnitPrice(orderItemReq.getUnitPrice());
 
         // check product
-        Product product = this.productService.getProductById(orderItemReq.getProduct().getId());
+        Product product = this.productService.getProductById(productId);
         orderItem.setProduct(product);
 
         // check order
-
-        Order order = this.orderService.getOrderById(orderItemReq.getOrder().getId());
-        orderItemReq.setOrder(order);
+        Order order = this.orderService.getOrderById(orderId);
+        orderItem.setOrder(order);
 
         return this.orderItemRepository.save(orderItem);
     }
@@ -110,7 +128,6 @@ public class OrderItemService {
     public ResOrderItemDTO convertToResOrderItemDTO(OrderItem orderItem) {
         ResOrderItemDTO res = new ResOrderItemDTO();
         res.setId(orderItem.getId());
-        // res.setOrderId(orderItem.getOrderId()); // tương tự xử lý như với Product
         res.setQuantity(orderItem.getQuantity());
         res.setUnitPrice(orderItem.getUnitPrice());
         res.setCreatedAt(orderItem.getCreatedAt());
@@ -164,4 +181,5 @@ public class OrderItemService {
 
         return res;
     }
+
 }

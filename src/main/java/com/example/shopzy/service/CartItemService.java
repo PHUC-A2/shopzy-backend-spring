@@ -33,6 +33,15 @@ public class CartItemService {
 
     public CartItem createCartItem(CartItem cartItem) throws IdInvalidException {
 
+        Long cartId = cartItem.getCart().getId();
+        Long productId = cartItem.getProduct().getId();
+
+        boolean exists = this.cartItemRepository.existsByCartIdAndProductId(cartId, productId);
+        if (exists) {
+            throw new IdInvalidException(
+                    "Product với ID = " + productId + " đã tồn tại trong Cart với ID = " + cartId);
+        }
+
         // check product trước nếu có thì truyền vào id không thì trả null
         Product product = this.productService.getProductById(cartItem.getProduct().getId());
         cartItem.setProduct(product);
@@ -80,16 +89,26 @@ public class CartItemService {
 
     public CartItem updateCartItem(CartItem cartItemReq) throws IdInvalidException {
         CartItem cartItem = this.getCartItemById(cartItemReq.getId());
-        // cartItem.setCartId(cartItemReq.getCartId());
-        cartItemReq.setQuantity(cartItemReq.getQuantity());
 
+        Long cartId = cartItemReq.getCart().getId();
+        Long productId = cartItemReq.getProduct().getId();
+
+        boolean exists = this.cartItemRepository.existsByCartIdAndProductIdAndIdNot(cartId, productId,
+                cartItem.getId());
+        if (exists) {
+            throw new IdInvalidException(
+                    "Product với ID = " + productId + " đã tồn tại trong Cart với ID = " + cartId + " khác");
+        }
+
+        // cartItem.setCartId(cartItemReq.getCartId());
+        cartItem.setQuantity(cartItemReq.getQuantity());
         // check product nếu có trong DB thì set không thì ném ra ex (đã xử lý ở
         // getProductById)
-        Product product = this.productService.getProductById(cartItemReq.getProduct().getId());
+        Product product = this.productService.getProductById(productId);
         cartItem.setProduct(product);
 
         // check cart
-        Cart cart = this.cartService.getCartById(cartItem.getCart().getId());
+        Cart cart = this.cartService.getCartById(cartId);
         cartItem.setCart(cart);
 
         return this.cartItemRepository.save(cartItem);

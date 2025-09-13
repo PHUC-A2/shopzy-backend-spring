@@ -1,5 +1,7 @@
 package com.example.shopzy.domain.request.user;
 
+import com.example.shopzy.util.constant.user.UserStatusEnum;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReqUpdateUserDTO {
-    
+
     private Long id;
 
     @NotBlank(message = "name không được để trống")
@@ -20,4 +22,6 @@ public class ReqUpdateUserDTO {
 
     @NotBlank(message = "phoneNumber không được để trống")
     private String phoneNumber;
+
+    private UserStatusEnum status;
 }

@@ -134,6 +134,7 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setFullName(userDTO.getFullName());
         user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setStatus(userDTO.getStatus());
         return user;
     }
 

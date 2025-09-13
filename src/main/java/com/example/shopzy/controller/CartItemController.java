@@ -51,7 +51,7 @@ public class CartItemController {
                 .ok(this.cartItemService.convertToResCartItemDTO(this.cartItemService.getCartItemById(id)));
     }
 
-    @PutMapping("/cart-items/{id}")
+    @PutMapping("/cart-items")
     @ApiMessage("Update cart item")
     public ResponseEntity<ResCartItemDTO> updateCartItem(@RequestBody CartItem cartItem) throws IdInvalidException {
         CartItem updated = this.cartItemService.updateCartItem(cartItem);

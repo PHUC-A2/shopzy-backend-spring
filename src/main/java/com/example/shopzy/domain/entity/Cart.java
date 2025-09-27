@@ -1,12 +1,16 @@
 package com.example.shopzy.domain.entity;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.shopzy.util.SecurityUtil;
+import com.example.shopzy.util.constant.cart.CartStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,7 +48,10 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<CartItem> cartItems;
+    private List<CartItem> cartItems = new ArrayList<>();
+
+     @Enumerated(EnumType.STRING)
+    private CartStatusEnum status = CartStatusEnum.OPEN;
 
     private Instant createdAt;
     private Instant updatedAt;

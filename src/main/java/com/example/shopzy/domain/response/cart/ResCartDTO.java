@@ -1,6 +1,9 @@
 package com.example.shopzy.domain.response.cart;
 
 import java.time.Instant;
+
+import com.example.shopzy.util.constant.cart.CartStatusEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResCartDTO {
     private Long id;
+    private CartStatusEnum status;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;

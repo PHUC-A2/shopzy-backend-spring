@@ -18,8 +18,14 @@ public class CorsConfig implements WebMvcConfigurer {
 
         // cho phép các URL nào có thể kết nối tới backend
         configuration.setAllowedOrigins(
-                Arrays.asList("http://localhost:3000", "http://localhost:4173", "http://localhost:5173",
-                        "http://172.20.10.3:5173", "http://192.168.1.9:5173"));
+                Arrays.asList("http://localhost:3000",
+                        "http://localhost:4173",
+                        "http://localhost:5173",
+                        "http://172.20.10.3:5173",
+                        "http://192.168.1.9:5173",
+                        "http://192.168.1.2:5173"
+                        // "http://localhost:8080/api/v1/products?page=1&size=12"
+                        ));
 
         // các method nào đc kết nối
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

@@ -118,11 +118,11 @@ public class CartService {
         // lấy giỏ hàng từ DB để chắc chắn dữ liệu mới nhất
         Cart cartDB = this.getCartById(cartId);
 
-        // ✅ Lấy user hiện tại từ SecurityContext
+        // Lấy user hiện tại từ SecurityContext
         String currentUserEmail = SecurityUtil.getCurrentUserLogin()
                 .orElseThrow(() -> new IdInvalidException("User not logged in"));
 
-        // ✅ Kiểm tra user trong cart có khớp với user hiện tại không
+        // Kiểm tra user trong cart có khớp với user hiện tại không
         if (!cartDB.getUser().getEmail().equals(currentUserEmail)) {
             throw new IdInvalidException("Bạn không có quyền xem giỏ hàng này");
         }

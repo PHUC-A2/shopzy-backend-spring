@@ -152,7 +152,7 @@
     productId (FK → Product.id)
     quantity
     unitPrice (giá tại thời điểm đặt, để không bị thay đổi khi giá Product thay đổi) → đây cũng là attribute bổ sung của quan hệ.
-    ✅ Kết luận:
+     Kết luận:
     Quan hệ 1–N → chỉ cần thêm FK là đủ.
     Quan hệ N–N → bắt buộc có bảng trung gian, có thể có thêm attribute nếu cần.
     Với CartItem và OrderItem thì attribute bổ sung (quantity, unitPrice) là cần thiết.
@@ -200,7 +200,7 @@
     OrderItem → @ManyToOne @JoinColumn(name="order_id")
     Product → @OneToMany(mappedBy="product")
     OrderItem → @ManyToOne @JoinColumn(name="product_id")
-    ✅ Tóm tắt các quan hệ chính
+     Tóm tắt các quan hệ chính
     User 1–N Cart (FK: cart.user_id)
     User 1–N Order (FK: order.user_id)
     User N–1 Role (FK: user.role_id)

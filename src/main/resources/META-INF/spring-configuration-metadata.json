@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "shopzy",
+      "type": "com.example.shopzy.config.ShopzyProperties",
+      "sourceType": "com.example.shopzy.config.ShopzyProperties",
+      "description": "All custom Shopzy properties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "shopzy.upload-file.base-uri",
+      "type": "java.lang.String",
+      "description": "Base URI for uploaded files"
+    },
+    {
+      "name": "shopzy.jwt.base64-secret",
+      "type": "java.lang.String",
+      "description": "JWT secret key"
+    },
+    {
+      "name": "shopzy.jwt.refresh-token-validity-in-second",
+      "type": "int",
+      "description": "JWT refresh token validity in seconds"
+    },
+    {
+      "name": "shopzy.jwt.refresh-token-validity-in-seconds",
+      "type": "int",
+      "description": "JWT refresh token validity in seconds"
+    },
+    {
+      "name": "shopzy.jwt.access-token-validity-in-seconds",
+      "type": "int",
+      "description": "JWT access token validity in seconds"
+    }
+  ]
+}

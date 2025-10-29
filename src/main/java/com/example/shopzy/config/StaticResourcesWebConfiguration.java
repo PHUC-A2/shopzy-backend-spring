@@ -15,6 +15,6 @@ public class StaticResourcesWebConfiguration
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/storage/**") // storage (kho, lưu trữ)
-                .addResourceLocations(baseURI);
+                .addResourceLocations("file:" + baseURI); // thêm file
     }
 }

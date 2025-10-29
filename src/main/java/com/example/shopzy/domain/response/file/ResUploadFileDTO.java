@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class ResUploadFileDTO {
     private String fileName;
     private Instant uploadedAt; // thời gian upload thành công
-    private String imageUrl; // đường dẫn để React hiển thị ảnh
+    private String url; // đường dẫn để React hiển thị ảnh
 }

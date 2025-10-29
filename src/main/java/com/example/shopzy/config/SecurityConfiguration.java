@@ -47,7 +47,8 @@ public class SecurityConfiguration {
                                 "/api/v1/auth/refresh",
                                 "/api/v1/auth/register",
                                 "/api/v1/products",
-                                "/api/v1/files",
+                                "/api/v1/files/**",
+                                "/storage/**",
                 };
 
                 http

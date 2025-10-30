@@ -1,4 +1,4 @@
-package com.example.shopzy.controller;
+package com.example.shopzy.controller.admin;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

@@ -8,6 +8,7 @@ import com.example.shopzy.util.SecurityUtil;
 import com.example.shopzy.util.constant.cart.CartStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -46,7 +47,11 @@ public class Cart {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    // @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    // @JsonIgnore
+    // private List<CartItem> cartItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<>();
 

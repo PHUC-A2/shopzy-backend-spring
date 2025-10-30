@@ -23,9 +23,11 @@ public class CorsConfig implements WebMvcConfigurer {
                         "http://localhost:5173",
                         "http://172.20.10.3:5173",
                         "http://192.168.1.9:5173",
-                        "http://192.168.1.2:5173"
-                        // "http://localhost:8080/api/v1/products?page=1&size=12"
-                        ));
+                        "http://192.168.1.2:5173",
+                        "http://192.168.1.10:5173",
+                        "http://192.168.1.10:8080"
+                // "http://localhost:8080/api/v1/products?page=1&size=12"
+                ));
 
         // các method nào đc kết nối
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

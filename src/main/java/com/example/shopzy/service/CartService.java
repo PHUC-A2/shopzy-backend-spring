@@ -21,6 +21,8 @@ import com.example.shopzy.util.SecurityUtil;
 import com.example.shopzy.util.constant.cart.CartStatusEnum;
 import com.example.shopzy.util.error.IdInvalidException;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CartService {
     private final CartRepository cartRepository;
@@ -183,27 +185,65 @@ public class CartService {
         return cart;
     }
 
+    // public ResCartClientDTO addProductToCart(Long productId, int quantity) throws
+    // IdInvalidException {
+    // Cart cart = getOrCreateCartForCurrentUser();
+
+    // Optional<CartItem> existingItem = cart.getCartItems().stream()
+    // .filter(ci -> ci.getProduct().getId().equals(productId))
+    // .findFirst();
+
+    // if (existingItem.isPresent()) {
+    // CartItem ci = existingItem.get();
+    // ci.setQuantity(ci.getQuantity() + quantity);
+    // } else {
+    // Product product = productService.getProductById(productId);
+    // CartItem newItem = new CartItem();
+    // newItem.setCart(cart);
+    // newItem.setProduct(product);
+    // newItem.setQuantity(quantity);
+    // cart.getCartItems().add(newItem);
+    // }
+
+    // cartRepository.save(cart);
+    // return convertToResCartClientDTO(cart.getId());
+    // }
+
+    @Transactional
     public ResCartClientDTO addProductToCart(Long productId, int quantity) throws IdInvalidException {
         Cart cart = getOrCreateCartForCurrentUser();
 
+        // Bước 1: Lấy product từ DB, nếu không có thì báo lỗi
+        Product product = productService.getProductById(productId);
+        if (product == null) {
+            throw new IdInvalidException("Không tìm thấy sản phẩm với ID = " + productId);
+        }
+
+        // Bước 2: Kiểm tra xem product đã có trong giỏ hàng chưa
         Optional<CartItem> existingItem = cart.getCartItems().stream()
-                .filter(ci -> ci.getProduct().getId().equals(productId))
+                .filter(ci -> ci.getProduct() != null && ci.getProduct().getId().equals(productId))
                 .findFirst();
 
         if (existingItem.isPresent()) {
+            // Nếu có -> cộng thêm số lượng
             CartItem ci = existingItem.get();
             ci.setQuantity(ci.getQuantity() + quantity);
         } else {
-            Product product = productService.getProductById(productId);
+            // Nếu chưa có -> tạo mới
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
             newItem.setProduct(product);
             newItem.setQuantity(quantity);
+
+            // Đảm bảo mối quan hệ 2 chiều được thiết lập
             cart.getCartItems().add(newItem);
         }
 
-        cartRepository.save(cart);
-        return convertToResCartClientDTO(cart.getId());
+        // Lưu giỏ hàng (có cascade xuống CartItem)
+        Cart savedCart = cartRepository.save(cart);
+
+        // Trả kết quả cập nhật
+        return convertToResCartClientDTO(savedCart.getId());
     }
 
     public ResCartClientDTO checkoutCart() throws IdInvalidException {

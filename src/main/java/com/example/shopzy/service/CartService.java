@@ -285,4 +285,28 @@ public class CartService {
         return convertToResCartClientDTO(cart.getId());
     }
 
+    @Transactional
+    public ResCartClientDTO updateQuantityByProduct(Long productId, int delta) throws IdInvalidException {
+        Cart cart = getOrCreateCartForCurrentUser();
+
+        Optional<CartItem> optionalItem = cart.getCartItems().stream()
+                .filter(ci -> ci.getProduct() != null && ci.getProduct().getId().equals(productId))
+                .findFirst();
+
+        if (optionalItem.isEmpty()) {
+            throw new IdInvalidException("Sản phẩm không tồn tại trong giỏ hàng");
+        }
+
+        CartItem cartItem = optionalItem.get();
+        int newQuantity = cartItem.getQuantity() + delta;
+        if (newQuantity <= 0) {
+            throw new IdInvalidException("Số lượng phải lớn hơn 0");
+        }
+
+        cartItem.setQuantity(newQuantity);
+        cartRepository.save(cart); // cascade sẽ lưu cartItem
+
+        return convertToResCartClientDTO(cart.getId());
+    }
+
 }

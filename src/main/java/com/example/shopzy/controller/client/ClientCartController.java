@@ -3,6 +3,7 @@ package com.example.shopzy.controller.client;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopzy.domain.entity.Cart;
+import com.example.shopzy.domain.request.cartitem.ReqUpdateQuantityDTO;
 import com.example.shopzy.domain.request.product.ReqCreateProductToCartClientD;
 import com.example.shopzy.domain.response.cart.ResCartClientDTO;
 import com.example.shopzy.service.CartService;
@@ -62,4 +64,18 @@ public class ClientCartController {
         ResCartClientDTO updatedCart = cartService.removeProductFromCart(cartItemId);
         return ResponseEntity.ok(updatedCart);
     }
+
+    @PatchMapping("/client/carts/items/update-quantity")
+    @ApiMessage("Increase or decrease product quantity in cart")
+    public ResponseEntity<ResCartClientDTO> updateQuantity(
+            @RequestBody ReqUpdateQuantityDTO req) throws IdInvalidException {
+
+        ResCartClientDTO updatedCart = cartService.updateQuantityByProduct(
+                req.getProductId(),
+                req.getQuantity() // ở đây dùng delta: +1, -1, hoặc số lượng muốn set
+        );
+
+        return ResponseEntity.ok(updatedCart);
+    }
+
 }

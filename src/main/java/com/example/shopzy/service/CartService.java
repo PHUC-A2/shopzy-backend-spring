@@ -256,4 +256,33 @@ public class CartService {
         return convertToResCartClientDTO(cart.getId());
     }
 
+    // xóa cartItemId
+    @Transactional
+    public ResCartClientDTO removeProductFromCart(Long cartItemId) throws IdInvalidException {
+        // Lấy giỏ hàng của user hiện tại
+        Cart cart = getOrCreateCartForCurrentUser();
+
+        // Tìm cartItem cần xóa trong giỏ
+        Optional<CartItem> itemToRemove = cart.getCartItems().stream()
+                .filter(ci -> ci.getId().equals(cartItemId))
+                .findFirst();
+
+        if (itemToRemove.isEmpty()) {
+            throw new IdInvalidException("Không tìm thấy sản phẩm trong giỏ hàng với ID = " + cartItemId);
+        }
+
+        // Xóa item khỏi giỏ
+        cart.getCartItems().remove(itemToRemove.get());
+
+        // Lưu lại cart (cascade sẽ tự động cập nhật CartItem)
+        cartRepository.save(cart);
+
+        System.out.println("User cart ID: " + cart.getId());
+        System.out.println("Cart items count: " + cart.getCartItems().size());
+        System.out.println("Trying to remove cartItemId: " + cartItemId);
+
+        // Trả về giỏ hàng mới nhất
+        return convertToResCartClientDTO(cart.getId());
+    }
+
 }

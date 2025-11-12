@@ -1,6 +1,7 @@
 package com.example.shopzy.controller.client;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,14 @@ public class ClientCartController {
     @ApiMessage("Checkout current user cart")
     public ResponseEntity<ResCartClientDTO> checkoutCart() throws IdInvalidException {
         return ResponseEntity.ok(cartService.checkoutCart());
+    }
+
+    @DeleteMapping("/client/carts/items/{cartItemId}")
+    @ApiMessage("Remove product from current user cart")
+    public ResponseEntity<ResCartClientDTO> removeProductFromCart(
+            @PathVariable("cartItemId") Long cartItemId) throws IdInvalidException {
+
+        ResCartClientDTO updatedCart = cartService.removeProductFromCart(cartItemId);
+        return ResponseEntity.ok(updatedCart);
     }
 }
